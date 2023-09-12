@@ -7,7 +7,8 @@ import cors from 'cors';
 import { User } from '@prisma/client';
 import usersRouter from './routes/user';
 import authRouter from './routes/auth';
-
+import productRouter from './routes/product';
+import categoryRouter from './routes/category';
 
 dotenv.config()
 
@@ -28,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'images')));
 app.use(cors())
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/products', productRouter);
+app.use('/api/v1/category', categoryRouter);
 
 // catch 404 and forward to error handler
 app.use("*",function(req:Request, res:Response, next:NextFunction) {
