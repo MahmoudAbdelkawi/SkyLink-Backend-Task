@@ -1,6 +1,6 @@
 
 import express, { NextFunction, Request, Response } from 'express';
-
+import  ApiError  from './utils/ApiError';
 import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -24,10 +24,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(cors())
 
+// catch 404 and forward to error handler
+app.use("*",function(req:Request, res:Response, next:NextFunction) {
+  return next(new ApiError("Page not found" , 404));
+});
+
+// error handler
+app.use(function(err:ApiError, req:Request, res:Response, next:NextFunction) {
+    res.status(err.statusCode || 500).send({
+        message: err.message || "Something went wrong",
+        stack : err.stack
+    });
+});
+
 app.listen(4000,()=>{
     console.log("server is running......")
 })
 
+process.on("unhandledRejection",(err:ApiError)=>{
+  console.log(err.name);
+  console.log(err.message);
+})
 
 
 module.exports = app;
